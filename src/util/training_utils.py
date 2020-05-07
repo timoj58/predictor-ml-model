@@ -28,8 +28,8 @@ def create_train_path(type, country):
 
     return train_path
 
-def create_data_range(learning_cfg, history_file, type, country):
-    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
+def create_data_range(learning_cfg, history_file, country):
+    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, country)
 
     if learning_cfg['historic']:
       data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)

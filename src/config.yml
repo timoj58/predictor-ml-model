@@ -3,7 +3,7 @@ base:
   aws_url: ""
   aws_bucket: "tabiiki-test"
   local: "/home/timmytime/"
-  docker_host: "http://ec2-34-229-85-188.compute-1.amazonaws.com"
+
   train_path: "train/<type>/<key>/"
   vocab_path: "vocab/<type>/<key>/"
   country_results_train_history_file: "country-matches-train-history.json"
@@ -99,8 +99,3 @@ analysis:
 receipt:
   train_receipt_url: ":8090/api/prediction/ml-data/train/receipt"
   predict_receipt_url: ":8090/api/prediction/ml-data/predict/receipt"
-
-auth:
-  username: "timmytime"
-  password: "testing"
-  url: "http://ec2-34-229-85-188.compute-1.amazonaws.com:8091/api/prediction/authenticate"

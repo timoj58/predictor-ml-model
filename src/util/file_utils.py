@@ -196,6 +196,7 @@ def s3_call_with_error_handling(aws_path, filename):
 #replacment s3 client utils
 def download_file(key, filepath, retry_count):
     try:
+      logger.info('trying to access '+key+' '+filepath)
       s3_client.download_file(aws_bucket, key, filepath)
     except ClientError as e:
         logger.info('get failed')

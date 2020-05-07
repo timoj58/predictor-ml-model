@@ -1,7 +1,6 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-from util.auth_utils import auth
 from util.config_utils import get_vocab_cfg
 from util.file_utils import is_on_file
 from util.file_utils import put_aws_file_with_path
@@ -19,10 +18,8 @@ from util.train_history_utils import add_vocab_history
 logger = logging.getLogger(__name__)
 
 
-docker_host = get_dir_cfg()['docker_host']
 
-
-TEAMS_URL = docker_host+get_vocab_cfg()['team_vocab_url']
+TEAMS_URL = get_vocab_cfg()['team_vocab_url']
 
 
 local_dir = get_dir_cfg()['local']
@@ -45,7 +42,7 @@ def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
 
   if not is_on_file(filename):
 
-    response = requests.get(url,headers={'application-token': auth()})
+    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION'})
     values = response.json()
 
 

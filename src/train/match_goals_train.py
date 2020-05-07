@@ -19,15 +19,11 @@ def train(receipt):
 
     logger.info ('starting...')
 
-    # so get types.
-    types = cache_utils.get_types(cache_utils.TYPES_URL)
 
-    for type in types:
-        logger.info (type)
-        countries = cache_utils.get_countries(cache_utils.COUNTRIES_URL, type)
-        for country in countries:
-            logger.info (country)
-            train_country(type, country, receipt)
+    countries = cache_utils.get_countries(cache_utils.COUNTRIES_URL)
+    for country in countries:
+      logger.info (country)
+      train_country("FOOTBALL", country, receipt)
 
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
 
@@ -43,7 +39,7 @@ def train_country(type, country, receipt):
     training_utils.train_match(
         type=type,
         country=country,
-        data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, type=type, country=country),
+        data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, country=country),
         label='goals',
         label_values=match_dataset.GOALS,
         model_dir="match_goals",

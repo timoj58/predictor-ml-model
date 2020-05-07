@@ -1,7 +1,7 @@
 import requests
 from requests.auth import HTTPDigestAuth
 from util.file_utils import write_csv
-from util.auth_utils import auth
+
 from util.config_utils import get_analysis_cfg
 from util.config_utils import get_analysis_cfg
 from util.file_utils import put_aws_file_with_path
@@ -21,10 +21,9 @@ import json
 
 logger = logging.getLogger(__name__)
 
-docker_host = get_dir_cfg()['docker_host']
 local_dir = get_dir_cfg()['local']
 
-EVENT_MODEL_URL = docker_host+get_analysis_cfg()['team_model_url']
+EVENT_MODEL_URL = get_analysis_cfg()['team_model_url']
 
 
 def real_time_range(start_day, start_month, start_year):
@@ -80,7 +79,7 @@ def create_csv(url, filename, range, aws_path):
         return get_aws_file(head.replace(local_dir,'')+'/',tail)
     else:
 
-     data = requests.get(url+range, headers={'application-token': auth()})
+     data = requests.get(url+range, headers={'groups': 'ROLE_AUTOMATION'})
      has_data = write_csv(filename, data)
 
      logger.info ('created csv')
