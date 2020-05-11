@@ -47,6 +47,5 @@ def train_country(type, country, receipt):
         receipt=receipt,
         history=history,
         previous_vocab_date=previous_vocab_date,
-        show_outcome=False,
         history_file=history_file)
 
