@@ -13,6 +13,5 @@ def predict(data, type, country, receipt):
         label='goals',
         label_values=match_dataset.GOALS,
         model_dir="match_goals",
-        outcome=False,
         previous_vocab_date=previous_vocab_date,
         receipt=receipt)

@@ -15,7 +15,6 @@ def predict(data, type, country, receipt):
     label='outcome',
     label_values=match_dataset.OUTCOMES,
     model_dir="match_result",
-    outcome=False,
     previous_vocab_date=previous_vocab_date,
     receipt=receipt)
 
