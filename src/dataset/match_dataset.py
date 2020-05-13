@@ -2,25 +2,11 @@ import pandas as pd
 
 # need to map homeWin, draw, awayWin
 
-CSV_COLUMN_NAMES = ['home', 'homePlayer1', 'homePlayer2', 'homePlayer3', 'homePlayer4', 'homePlayer5', 'homePlayer6',
-                    'homePlayer7', 'homePlayer8', 'homePlayer9', 'homePlayer10', 'homePlayer11',
-                    'homeSub1', 'homeSub2', 'homeSub3',
-                    'away', 'awayPlayer1', 'awayPlayer2', 'awayPlayer3', 'awayPlayer4', 'awayPlayer5', 'awayPlayer6',
-                    'awayPlayer7', 'awayPlayer8', 'awayPlayer9', 'awayPlayer10', 'awayPlayer11',
-                    'awaySub1', 'awaySub2', 'awaySub3',
-                    'outcome', 'scoreOutcome', 'goals']
+CSV_COLUMN_NAMES = ['home', 'away', 'outcome', 'goals']
 
 OUTCOMES = ['homeWin', 'awayWin', 'draw']
 
-GOALS = [0,1,2,3,4,5,6,7,8,9,10,11,12]
-
-SCORE_OUTCOMES = ['0-0', '1-1', '2-2', '3-3', '4-4', '5-5', '6-6', '1-0', '2-0', '3-0', '4-0', '5-0', '6-0', '7-0', '8-0','9-0','10-0',
-                  '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8', '0-9','0-10',
-                  '2-1', '1-2', '3-1', '1-3', '4-1', '1-4', '5-1', '1-5', '6-1', '1-6', '7-1', '1-7', '8-1', '1-8', '9-1', '1-9','10-1','1-10',
-                  '3-2', '2-3', '4-2', '2-4', '5-2', '2-5', '6-2', '2-6', '7-2', '2-7', '8-2', '2-8', '9-2','2-9','10-2', '2-10',
-                  '4-3', '3-4', '5-3', '3-5', '6-3', '3-6', '7-3', '3-7', '8-3', '3-8',
-                  '5-4', '4-5', '6-4', '4-6', '7-4', '4-7', '8-4', '4-8',
-                  '6-5', '5-6', '7-5', '5-7', '8-5', '5-8']
+GOALS = list(range(0,13))
 
 
 def load_train_data(train_path, y_name, convert):

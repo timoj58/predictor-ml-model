@@ -21,15 +21,14 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create_train_path(type, country):
+def create_train_path(country):
     train_path = get_dir_cfg()['train_path']
-    train_path = train_path.replace('<type>', type)
     train_path = train_path.replace('<key>', country)
 
     return train_path
 
-def create_data_range(learning_cfg, history_file, type, country):
-    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
+def create_data_range(learning_cfg, history_file, country):
+    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, country)
 
     if learning_cfg['historic']:
       data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
@@ -71,7 +70,7 @@ def get_next_in_range(range, data):
 
     return data
 
-def train_match(type, country, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, show_outcome, history_file):
+def train_match(country, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
 
   for data in data_range:
 
@@ -86,7 +85,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL +country,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
@@ -94,7 +93,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
     if learning_cfg['evaluate']:
 
      has_test_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL +country,
         filename=evaluate_file_path,
         range=get_next_in_range(data_range,data),
         aws_path=train_path)
@@ -117,7 +116,6 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
         #    get_aws_file(train_path,  test_filename)
 
         match_model.create(
-            type=type,
             country=country,
             train=True,
             label=label,
@@ -125,7 +123,6 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
             model_dir=model_dir,
             train_filename=train_filename,
             test_filename=evaluate_filename,
-            outcome=show_outcome,
             previous_vocab_date=previous_vocab_date)
     else:
         logger.info ('no data to train')
@@ -141,46 +138,3 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
   history['status'] = "Success - Full"
   train_history_utils.add_history(history_file, country, history)
 
-
-def train_player(type, country, player, range, filename_prefix, label, model_dir, train_path, history, previous_vocab_date):
-
-    train_filename = "train-"+filename_prefix+range.replace('/','-')+".csv"
-    test_filename = "test-"+filename_prefix+".csv"
-    train_file_path = local_dir+train_path+train_filename
-    test_file_path = local_dir+train_path+test_filename
-
-
-    #def create_csv(url, filename, range, aws_path):
-
-    has_data = model_utils.create_csv(
-        url=model_utils.PLAYER_MODEL_URL + player,
-        train_filename=train_file_path,
-        range=range,
-        aws_path=train_path)
-
-    if has_data:
-        ##take a copy of our file if it doesnt exist.
-        if not is_on_file(test_file_path):
-            copyfile(train_file_path,
-                     test_file_path)
-            put_aws_file_with_path(train_path, test_filename)
-        else:
-            get_aws_file(train_path,  test_filename)
-
-        player_model.create(
-            type=type,
-            country=country,
-            player=player,
-            train=True,
-            label=label,
-            label_values=player_dataset.FIRST_LAST_OUTCOMES,
-            model_dir=model_dir,
-            train_filename=train_path+train_filename,
-            test_filename=train_path+test_filename,
-            convert=True,
-            previous_vocab_date=previous_vocab_date)
-    else:
-        logger.info ('no data to train')
-
-    history['status'] = "Success - Full"
-    train_history_utils.add_history("players-"+filename_prefix+"-train-history.json", country, history)

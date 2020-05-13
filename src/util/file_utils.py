@@ -97,22 +97,11 @@ def put_aws_file_with_path(aws_path, filename):
         head, tail = os.path.split(filename)
         logger.info('putting file to aws - '+aws_url+aws_path+tail)
 
-        s3_call_with_error_handling(filename)
+        s3_call_with_error_handling(aws_path, filename)
 
        # with open(local_dir+aws_path+filename,'rb') as filedata:
        #   s3_call_with_error_handling(aws_url+aws_path+tail, filedata)
           #requests.put(aws_url+aws_path+tail, data=filedata, headers={})
-
-
-def put_aws_file(filename):
-    if aws:
-     head, tail = os.path.split(filename)
-     logger.info('putting file to aws - '+aws_url+tail)
-
-     s3_call_with_error_handling(filename)
-     #with open(filename, 'rb') as filedata:
-     #    s3_call_with_error_handling(aws_url+tail, filedata)
-         #requests.put(aws_url+tail, data=filedata, headers={})
 
 def is_on_file(filename):
     if aws is False:
@@ -187,14 +176,14 @@ def write_csv(filename, data):
 #    if result is not None:
 #        raise result
 
-def s3_call_with_error_handling(filename):
+def s3_call_with_error_handling(aws_path, filename):
     retry_count = 0
 
     result = False
 
     while retry_count < 3 and result is not None:
         # result = put_file(url, filedata)
-        result = upload_file(filename)
+        result = upload_file(aws_path, filename)
         if result is not None:
             time.sleep(1)
 
@@ -207,6 +196,7 @@ def s3_call_with_error_handling(filename):
 #replacment s3 client utils
 def download_file(key, filepath, retry_count):
     try:
+      logger.info('trying to access '+key+' '+filepath)
       s3_client.download_file(aws_bucket, key, filepath)
     except ClientError as e:
         logger.info('get failed')
@@ -217,12 +207,14 @@ def download_file(key, filepath, retry_count):
             raise err
 
 #need download equivalent.  can reduce code a lot.
-def upload_file(filename):
+def upload_file(aws_path, filename):
     try:
-        s3_client.upload_file(filename, aws_bucket, filename.replace(local_dir, ''))
-        return None
+      logger.info('file '+local_dir+aws_path+filename)
+
+      s3_client.upload_file(local_dir+aws_path+filename, aws_bucket, aws_path+filename)
+      return None
     except ClientError as e:
-        raise err
+      raise err
 
 
 
