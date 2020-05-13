@@ -40,19 +40,19 @@ def test_app():
 
 
 
-@app.route('/predict/goals/<type>/<country>/<receipt>',  methods=['POST'])
-def predict_goals(type, country, receipt):
+@app.route('/predict/goals/<country>/<receipt>',  methods=['POST'])
+def predict_goals(country, receipt):
     thread = threading.Thread(target=match_goals_prediction.predict,
-                              args=(json.loads(request.data), type, country, receipt))
+                              args=(json.loads(request.data), country, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/result/<type>/<country>/<receipt>',  methods=['POST'])
-def predict_result(type, country, receipt):
+@app.route('/predict/result/<country>/<receipt>',  methods=['POST'])
+def predict_result(country, receipt):
     thread = threading.Thread(target=match_result_prediction.predict,
-                              args=(json.loads(request.data), type, country, receipt))
+                              args=(json.loads(request.data), country, receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -69,10 +69,10 @@ def train_results(receipt):
 
 
 # need to also schedule this -- this is for me to get it started.
-@app.route('/train/results/<type>/<country>/<receipt>', methods=['POST'])
-def train_country_results(type, country, receipt):
+@app.route('/train/results/<country>/<receipt>', methods=['POST'])
+def train_country_results(country, receipt):
     thread = threading.Thread(target=match_result_train.train_country,
-                          args=(type, country, receipt))
+                          args=(country, receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -88,10 +88,10 @@ def train_total_goals(receipt):
 
 
 # need to also schedule this -- this is for me to get it started.
-@app.route('/train/goals/<type>/<country>/<receipt>', methods=['POST'])
-def train_country_total_goals(type, country, receipt):
+@app.route('/train/goals/<country>/<receipt>', methods=['POST'])
+def train_country_total_goals(country, receipt):
     thread = threading.Thread(target=match_goals_train.train_country,
-                              args=(type, country, receipt))
+                              args=(country, receipt))
     process(thread)
 
     return json.dumps(done_response())

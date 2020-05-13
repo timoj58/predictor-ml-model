@@ -79,7 +79,7 @@ def create_csv(url, filename, range, aws_path):
         return get_aws_file(head.replace(local_dir,'')+'/',tail)
     else:
 
-     data = requests.get(url+range, headers={'groups': 'ROLE_AUTOMATION'})
+     data = requests.get(url+range, headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
      has_data = write_csv(filename, data)
 
      logger.info ('created csv')

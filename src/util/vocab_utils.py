@@ -26,13 +26,12 @@ local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
 
 
-def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
+def create_vocab(url, filename, country, previous_vocab_date):
 
   vocab_path = get_dir_cfg()['vocab_path']
 
-  url = url+"?type="+type+"&country="+country
+  url = url+"?country="+country
 
-  vocab_path = vocab_path.replace('<type>', type)
   vocab_path = vocab_path.replace('<key>', country)
 
   previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
@@ -42,7 +41,7 @@ def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
 
   if not is_on_file(filename):
 
-    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION'})
+    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
     values = response.json()
 
 

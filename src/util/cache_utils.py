@@ -6,14 +6,14 @@ from util.config_utils import get_analysis_cfg
 from util.config_utils import get_dir_cfg
 
 
-TYPES_URL = get_analysis_cfg()['types_url']
 COUNTRIES_URL = get_analysis_cfg()['countries_url']
 COMPETITIONS_BY_COUNTRY_URL = get_analysis_cfg()['comps_by_country_url']
 
+HEADERS={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'}
 
 def get_countries(url):
 
-    response = requests.get(url, headers={'groups': 'ROLE_AUTOMATION'})
+    response = requests.get(url, headers=HEADERS)
     values = response.json()
 
     countries = []
@@ -25,7 +25,7 @@ def get_countries(url):
 
 def get_teams(url, country):
 
-    response = requests.get(url+"?country="+country, headers={'groups': 'ROLE_AUTOMATION'})
+    response = requests.get(url+"?country="+country, headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
     values = response.json()
 
     teams = []
@@ -39,6 +39,7 @@ def get_teams(url, country):
 
 
 def get_competitions_per_country(url, country):
-    response = requests.get(url+"?country="+country, headers={'groups': 'ROLE_AUTOMATION'})
+    print(url)
+    response = requests.get(url+"?country="+country, headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
     return response.json()['count']
 

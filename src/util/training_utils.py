@@ -21,9 +21,8 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create_train_path(type, country):
+def create_train_path(country):
     train_path = get_dir_cfg()['train_path']
-    train_path = train_path.replace('<type>', type)
     train_path = train_path.replace('<key>', country)
 
     return train_path
@@ -71,7 +70,7 @@ def get_next_in_range(range, data):
 
     return data
 
-def train_match(type, country, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
+def train_match(country, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
 
   for data in data_range:
 
@@ -86,7 +85,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL + +country,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
@@ -94,7 +93,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
     if learning_cfg['evaluate']:
 
      has_test_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL +country,
         filename=evaluate_file_path,
         range=get_next_in_range(data_range,data),
         aws_path=train_path)
@@ -117,7 +116,6 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
         #    get_aws_file(train_path,  test_filename)
 
         match_model.create(
-            type=type,
             country=country,
             train=True,
             label=label,

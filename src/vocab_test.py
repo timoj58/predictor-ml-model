@@ -1,5 +1,5 @@
 import util.vocab_utils as vocab_utils
-
+import util.cache_utils as cache_utils
 
 #vocab_utils.create_vocab(
 #    url='http://ec2-34-229-85-188.compute-1.amazonaws.com:8090/api/prediction/players/by-country-dict',
@@ -10,11 +10,8 @@ import util.vocab_utils as vocab_utils
 #    previous_vocab_date='2018-30-11'
 #)
 
-vocab_utils.patch_vocab(
-    '/home/timmytime/IdeaProjects/predictor-ml-model/res/new_file.txt',
-    '/home/timmytime/IdeaProjects/predictor-ml-model/res/previous_file.txt',
-    [{ 'id': 'a test'},{'id':'i should be added'}, { 'id': 'a new test'},{'id': 'and somemore' }]
-    )
+cache_utils.get_competitions_per_country('http://localhost:8090/api/prediction/cache/competition-count', 'england')
+
 
 
 
