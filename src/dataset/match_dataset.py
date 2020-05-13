@@ -6,7 +6,7 @@ CSV_COLUMN_NAMES = ['home', 'away', 'outcome', 'goals']
 
 OUTCOMES = ['homeWin', 'awayWin', 'draw']
 
-GOALS = range(0,13)
+GOALS = list(range(0,13))
 
 
 def load_train_data(train_path, y_name, convert):

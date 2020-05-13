@@ -19,8 +19,9 @@ def get_auth_cfg():
 def get_receipt_cfg():
     return cfg['receipt']
 
-def get_learning_cfg(country):
-    learning = cfg['learning']
+def get_learning_cfg(country, type):
+    config_by_types = cfg['learning']
+    learning = config_by_types[type]
     default = learning['default']
     response = {}
 

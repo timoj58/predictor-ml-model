@@ -85,7 +85,7 @@ def train_match(country, data_range, label, label_values, model_dir, train_path,
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + +country,
+        url=model_utils.EVENT_MODEL_URL +country,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
