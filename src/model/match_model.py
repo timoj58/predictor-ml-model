@@ -16,9 +16,9 @@ import json
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(type, country, train, label, label_values, model_dir, train_filename, test_filename, outcome, previous_vocab_date):
+def create(country, train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
 
-    aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country
+    aws_model_dir = 'models/'+model_dir+'/'+country
     tf_models_dir = local_dir+'/'+aws_model_dir
 
     learning_cfg = get_learning_cfg(country, model_dir)
@@ -29,31 +29,15 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
     team_file = vocab_utils.create_vocab(
         url=vocab_utils.TEAMS_URL,
         filename=vocab_utils.TEAMS_FILE,
-        type=type,
         country=country,
-        player_id=None,
         previous_vocab_date=previous_vocab_date);
     logger.info('team vocab completed')
-    logger.info ('player vocab started...')
-    player_file = vocab_utils.create_vocab(
-        url=vocab_utils.PLAYERS_BY_COUNTRY_URL,
-        filename=vocab_utils.PLAYERS_BY_COUNTRY_FILE,
-        type=type,
-        country=country,
-        player_id=None,
-        previous_vocab_date=previous_vocab_date);
-    logger.info ('player vocab completed')
 
     # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
     # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
     #need to add the label field too.
 
-
-    feature_columns = match_featureset.create_feature_columns(
-        player_vocab=player_file,
-        team_vocab=team_file,
-        outcome=outcome,
-        learning_cfg=learning_cfg)
+    feature_columns = match_featureset.create_feature_columns(team_vocab=team_file)
 
 
 

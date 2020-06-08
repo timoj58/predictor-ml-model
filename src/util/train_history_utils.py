@@ -10,6 +10,8 @@ local_dir = get_dir_cfg()['local']
 vocab_file = get_dir_cfg()['vocab_history_file']
 
 def write_history(filename, history):
+    logger.info('opening '+filename)
+
     with open(local_dir+filename, 'w') as outfile:
         json.dump(history, outfile)
 

@@ -1,7 +1,6 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-from util.auth_utils import auth
 from util.config_utils import get_vocab_cfg
 from util.file_utils import is_on_file
 from util.file_utils import put_aws_file_with_path
@@ -19,45 +18,30 @@ from util.train_history_utils import add_vocab_history
 logger = logging.getLogger(__name__)
 
 
-docker_host = get_dir_cfg()['docker_host']
 
-
-TEAMS_URL = docker_host+get_vocab_cfg()['team_vocab_url']
-PLAYERS_URL = docker_host+get_vocab_cfg()['player_vocab_url']
-PLAYERS_BY_COUNTRY_URL = docker_host+get_vocab_cfg()['player_by_country_vocab_url']
+TEAMS_URL = get_vocab_cfg()['team_vocab_url']
 
 
 local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
-PLAYERS_FILE = 'player-vocab'
-PLAYERS_BY_COUNTRY_FILE = 'player-by-country-vocab'
 
 
-def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
+def create_vocab(url, filename, country, previous_vocab_date):
 
   vocab_path = get_dir_cfg()['vocab_path']
 
-  if url == PLAYERS_URL:
-    url = url+"?player-id="+player_id
-    vocab_path = vocab_path.replace('<type>', type)
-    vocab_path = vocab_path.replace('<key>', player_id)
+  url = url+"?country="+country
 
-    previous_filename = local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
-    filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
-  else:
-    url = url+"?type="+type+"&country="+country
+  vocab_path = vocab_path.replace('<key>', country)
 
-    vocab_path = vocab_path.replace('<type>', type)
-    vocab_path = vocab_path.replace('<key>', country)
-
-    previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
-    filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
+  previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
+  filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
 
   logger.info('checking for '+filename)
 
   if not is_on_file(filename):
 
-    response = requests.get(url,headers={'application-token': auth()})
+    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
     values = response.json()
 
 
